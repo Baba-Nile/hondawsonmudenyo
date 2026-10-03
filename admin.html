@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-KE">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Administrator Portal | Sauti Ya Kwanza</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b1738">
+<link rel="icon" href="assets/img/favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/css/site.css"><link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<section id="login" class="login" aria-labelledby="lh">
+ <div class="login__art"><div><img src="assets/img/icon-192.png" alt="" width="56" height="56"><h2>Community Engagement Portal</h2><p>Review what residents across Kwanza are telling the team, and follow up on every request.</p></div></div>
+ <div class="login__box"><form class="login__form" id="lf" novalidate>
+  <img src="assets/img/icon-192.png" alt="Sauti Ya Kwanza" width="64" height="64">
+  <h1 id="lh">Administrator sign in</h1><p>Authorised team members only.</p>
+  <div class="alert alert--error msg" id="lm" role="alert"></div>
+  <div class="field"><label for="em">Email address</label><input class="input" id="em" type="email" autocomplete="username" required></div>
+  <div class="field"><label for="pw">Password</label><div class="pw"><input class="input" id="pw" type="password" autocomplete="current-password" required><button type="button" id="ey" aria-label="Show password" aria-pressed="false"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#eye"/></svg></button></div></div>
+  <div class="row"><label><input type="checkbox" id="rm"> Remember me</label><button type="button" class="linkbtn" id="fp">Forgot password?</button></div>
+  <button class="btn btn--dark" id="lb" type="submit"><span>Sign in</span></button>
+  <p class="login__back"><a href="index.html">← Back to website</a></p>
+ </form></div>
+</section>
+
+<div id="app" class="shell hide">
+ <header class="topbar"><button class="iconbtn" id="sbt" type="button" aria-expanded="false" aria-controls="side" aria-label="Open menu"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#menu"/></svg></button>
+  <a class="topbar__brand" href="#overview"><img src="assets/img/icon-192.png" alt="" width="32" height="32"><span>Admin portal</span></a><span class="live live--sm">Live</span></header>
+ <aside class="side" id="side" aria-label="Portal sidebar">
+  <a class="side__brand" href="#overview"><img src="assets/img/icon-192.png" alt="" width="40" height="40"><span>Sauti Ya Kwanza<small>Admin portal</small></span></a>
+  <nav aria-label="Portal">
+   <a href="#overview" data-v="overview"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#dashboard"/></svg>Overview</a>
+   <a href="#responses" data-v="responses"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#list"/></svg>Responses<span class="count" id="cnt-all" hidden>0</span></a>
+   <a href="#meetings" data-v="meetings"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#users"/></svg>Meeting requests<span class="count count--quiet" id="cnt-want" hidden>0</span></a>
+   <a href="#analytics" data-v="analytics"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#chart"/></svg>Analytics</a>
+   <a href="#activity" data-v="activity"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#activity"/></svg>Activity</a>
+   <a href="#settings" data-v="settings"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#settings"/></svg>Settings</a>
+  </nav>
+  <div class="side__foot">
+   <a class="side__site" href="index.html" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#external"/></svg>View website</a>
+   <div class="acct">
+    <button type="button" class="acct__btn" id="acb" aria-haspopup="menu" aria-expanded="false" aria-controls="acm"><span class="avatar" id="av" aria-hidden="true">A</span><span class="acct__t"><b id="who">Signed in</b><small id="role"></small></span><svg class="i" aria-hidden="true"><use href="assets/icons.svg#chevron-down"/></svg></button>
+    <div class="acct__menu" id="acm" role="menu" hidden><p class="acct__id"><small>Signed in as</small><b id="who2"></b></p><button type="button" role="menuitem" id="lo"><svg class="i" aria-hidden="true"><use href="assets/icons.svg#log-out"/></svg>Log out</button></div>
+   </div>
+  </div>
+ </aside>
+ <div class="scrim" id="scrim" hidden></div>
+
+ <main id="main" class="content" tabindex="-1">
+  <section data-view="overview" aria-labelledby="h-overview"><div id="v-overview"></div></section>
+  <section data-view="responses" aria-labelledby="h-responses" hidden><div id="v-responses"></div></section>
+  <section data-view="meetings" aria-labelledby="h-meetings" hidden><div id="v-meetings"></div></section>
+  <section data-view="analytics" aria-labelledby="h-analytics" hidden><div id="v-analytics"></div></section>
+  <section data-view="activity" aria-labelledby="h-activity" hidden><div id="v-activity"></div></section>
+  <section data-view="settings" aria-labelledby="h-settings" hidden><div id="v-settings"></div></section>
+ </main>
+</div>
+
+<div id="drawer" class="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="dh"><div class="drawer__scrim" data-close></div><div class="drawer__panel" id="dp"></div></div>
+<div id="toasts" role="status" aria-live="polite"></div>
+<script type="module" src="assets/js/admin.js"></script>
+</body></html>

@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Staff = signed in AND has /admins/{uid} with role "admin" or "editor".
+    // /admins documents are created only by the project owner in the Firebase console.
+    function isStaff() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'editor'];
+    }
+    function isAdmin() {
+      return isStaff()
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'admin';
+    }
+    function optStr(d, k, max) {
+      return !(k in d) || (d[k] is string && d[k].size() <= max);
+    }
+
+    // A signed-in user may read ONLY their own authorization record. Nobody can write it from the app.
+    match /admins/{uid} {
+      allow get: if request.auth != null && request.auth.uid == uid;
+      allow list, create, update, delete: if false;
+    }
+
+    match /communityEngagement/{id} {
+      // PUBLIC: create a limited submission only. No read, update or delete.
+      allow create: if request.resource.data.keys().hasAll(['createdAt', 'knowsDawson', 'consentToContact', 'status'])
+        && request.resource.data.keys().hasOnly(['createdAt', 'knowsDawson', 'hasMetDawson', 'metWard', 'metLocation',
+             'wantsMeeting', 'preferredWard', 'preferredArea', 'meetingSetting', 'discussionTopic',
+             'name', 'phone', 'email', 'consentToContact', 'status'])
+        && request.resource.data.status == 'new'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.knowsDawson is bool
+        && request.resource.data.consentToContact is bool
+        && (!('hasMetDawson' in request.resource.data) || request.resource.data.hasMetDawson is bool)
+        && (!('wantsMeeting' in request.resource.data) || request.resource.data.wantsMeeting is bool)
+        && optStr(request.resource.data, 'metWard', 60)
+        && optStr(request.resource.data, 'preferredWard', 60)
+        && optStr(request.resource.data, 'metLocation', 120)
+        && optStr(request.resource.data, 'preferredArea', 120)
+        && optStr(request.resource.data, 'meetingSetting', 40)
+        && optStr(request.resource.data, 'discussionTopic', 600)
+        && optStr(request.resource.data, 'name', 80)
+        && optStr(request.resource.data, 'phone', 20)
+        && optStr(request.resource.data, 'email', 120)
+        // Contact details are only accepted together with explicit consent.
+        && (!('phone' in request.resource.data || 'email' in request.resource.data || 'name' in request.resource.data)
+            || request.resource.data.consentToContact == true);
+
+      // STAFF: read submissions; editors and admins may change ONLY the status field.
+    allow get, list: if request.auth != null;
+      allow update: if isStaff()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['new', 'reviewed', 'contacted', 'scheduled', 'completed'];
+      allow delete: if isAdmin();
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}
